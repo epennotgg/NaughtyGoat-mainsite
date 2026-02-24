@@ -1,84 +1,460 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NaughtyGoat - Home</title>
+    <title>NaughtyGoat - Portfolio</title>
     <link rel="stylesheet" href="w3.css">
     <link rel="shortcut icon" href="assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+            padding: 80px 20px;
+            text-align: center;
+        }
+        .skill-card {
+            transition: transform 0.3s;
+        }
+        .skill-card:hover {
+            transform: translateY(-5px);
+        }
+        .contact-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+
+        /* Mobile Navigation Styles */
+        .mobile-menu-btn {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 0;
+            z-index: 1001;
+            font-size: 24px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .close-header-btn {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 0;
+            z-index: 1001;
+            font-size: 24px;
+            padding: 8px 16px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 0;
+                right: 0;
+                margin: 0;
+                height: 50px;
+                width: 50px;
+                border-radius: 0;
+                z-index: 1003;
+            }
+
+            .close-header-btn {
+                position: fixed;
+                top: 0;
+                right: 0;
+                margin: 0;
+                height: 50px;
+                width: 50px;
+                border-radius: 0;
+                z-index: 1003;
+            }
+
+            .close-header-btn.show {
+                display: block;
+            }
+
+            .mobile-menu-btn.hide {
+                display: none;
+            }
+
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: fixed;
+                top: 50px;
+                left: 0;
+                background-color: #333;
+                z-index: 1002;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+            }
+
+            .nav-menu.show {
+                display: flex;
+            }
+
+            .nav-menu a {
+                display: block;
+                text-align: center;
+                padding: 15px;
+                border-bottom: 1px solid #444;
+                text-decoration: none;
+                color: white;
+                font-size: 16px;
+            }
+
+            .nav-menu a:hover {
+                background-color: #444;
+            }
+            
+            .w3-bar.w3-gray.w3-top {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 0;
+                height: 50px;
+                min-height: 50px;
+                z-index: 1001;
+                background-color: #333;
+                margin: 0;
+            }
+
+            body {
+                padding-top: 0;
+                margin-top: 0;
+            }
+            
+            .hero-section {
+                padding-top: 60px;
+            }
+            
+            /* Pastikan konten di bawah nav menu */
+            .w3-container {
+                position: relative;
+                z-index: 1;
+            }
+        }
+        /* Floating Header */
+        .w3-bar.w3-top.floating {
+            position: fixed;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style adjustments as needed */
+        .w3-bar.w3-top.floating {
+            background-color: #444 !important;
+            z-index: 1000;
+        }
+    </style>
 </head>
-<body class="w3-black w3-content">
-    <!--header cok-->
-    <div class="w3-bar w3-gray">
-        <a href="index.html" class="w3-bar-item w3-button w3-mobile w3-light-green">Home</a>
-        <a href="links.html" class="w3-bar-item w3-button w3-mobile">About</a>
-        <a href="https://discord.gg/aeZZHK5cHh" class="w3-bar-item w3-button w3-mobile">Support</a>
-        <div class="w3-dropdown-hover w3-mobile">
-          <button class="w3-button">Category</button>
-          <div class="w3-dropdown-content w3-bar-block w3-dark-grey">
-            <a href="#" class="w3-bar-item w3-button w3-mobile">Download apps</a>
-            <a href="tutorials/index.html" class="w3-bar-item w3-button w3-mobile">Tutorials</a>
-            <a href="#" class="w3-bar-item w3-button w3-mobile">Other stuff</a>
-          </div>
+<body class="w3-black">
+
+    <!-- Header Navigation -->
+    <div class="w3-bar w3-gray w3-top" id="mainHeader" style="position: relative;">
+        <button class="mobile-menu-btn" id="hamburgerBtn" onclick="showHeader()">
+            ☰
+        </button>
+        <button class="close-header-btn" id="closeBtn" onclick="hideHeader()">
+            ✕
+        </button>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="w3-bar-item w3-button w3-mobile w3-light-green">Home</a>
+            <a href="links.html" class="w3-bar-item w3-button w3-mobile">Links</a>
+            <a href="https://blog.mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Blog</a>
+            <a href="https://saweria.co/mbeknakal" class="w3-bar-item w3-button w3-mobile">Donate</a>
+            <a href="mailto:support@mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Contact</a>
         </div>
-      </div>
-    <!--Kepala-->
-    <div class="w3-container w3-mobile">
-        <h2 class="w3-center w3-wide"><b>NaughtyGoat</b></h2>
-        <p class="w3-center w3-opacity">When a goat gets lost</p>
     </div>
 
-    <!--ini about lur-->
-    <div class="w3-container w3-mobile">
-      <p class="w3-center">Welcome to my random website. Here you can search for something important or download something. And I as a goat don't really care if you want to do anything on my website, the important thing is to enjoy</p>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="w3-container w3-content" style="max-width:800px">
+            <img src="assets/logo.png" alt="NaughtyGoat Logo" class="w3-circle" style="width:120px; height:120px; margin-bottom:20px;">
+            <h1 class="w3-xxlarge w3-wide"><b>NaughtyGoat</b></h1>
+            <p class="w3-large w3-opacity">Novice Web Programmer, Designer, Photographer, and Content Creator</p>
+            <p class="w3-medium">Welcome to my personal portfolio. I create digital experiences that blend creativity with functionality.</p>
+            <a href="#skills" class="w3-button w3-light-green w3-padding-large w3-margin-top w3-round-large">
+                Explore My Skills
+            </a>
+        </div>
     </div>
 
-    <!--progress-->
-    <div class="w3-container w3-mobile">
-      <p>Web progress</p>
-      <div class="w3-grey w3-round-xlarge">
-        <div class="w3-container w3-light-green w3-center w3-round-xlarge" style="width:20%">20%</div>
-      </div>
+    <!-- Skills Section -->
+    <div id="skills" class="w3-container w3-padding-64 w3-content">
+        <h2 class="w3-center w3-wide">My Skills</h2>
+        <p class="w3-center w3-opacity">Technologies and tools I work with</p>
+        
+        <div class="w3-row-padding w3-margin-top">  
+            <!-- Skill 1 -->
+            <div class="w3-third">
+                <div class="w3-card w3-dark-grey w3-padding skill-card">
+                    <div class="w3-container">
+                        <h3 class="w3-center">Web Development</h3>
+                        <div class="w3-center">
+                            <img src="assets/a1.png" alt="Web Dev" style="width:80px; height:80px;">
+                        </div>
+                        <p>HTML5, CSS3, JavaScript, Responsive Design</p>
+                        <div class="w3-light-grey w3-round-xlarge">
+                            <div class="w3-container w3-light-green w3-round-xlarge" style="width:78%">78%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      <p>HTML skill</p>
-      <div class="w3-grey w3-round-xlarge">
-        <div class="w3-container w3-light-green w3-center w3-round-xlarge" style="width:68%">68%</div>
-      </div>
+            <!-- Skill 2 -->
+            <div class="w3-third">
+                <div class="w3-card w3-dark-grey w3-padding skill-card">
+                    <div class="w3-container">
+                        <h3 class="w3-center">UI/UX Design</h3>
+                        <div class="w3-center">
+                            <img src="assets/a2.png" alt="UI/UX" style="width:80px; height:80px;">
+                        </div>
+                        <p>User Interface, User Experience, Wireframing</p>
+                        <div class="w3-light-grey w3-round-xlarge">
+                            <div class="w3-container w3-light-green w3-round-xlarge" style="width:70%">70%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-      <p>Pemula or Sepuh</p>
-      <div class="w3-grey w3-round-xlarge">
-        <div class="w3-container w3-light-green w3-center w3-round-xlarge" style="width:1%">pemula bjir</div>
-      </div>
+            <!-- Skill 3 -->
+            <div class="w3-third">
+                <div class="w3-card w3-dark-grey w3-padding skill-card">
+                    <div class="w3-container">
+                        <h3 class="w3-center">Creatior & Multimedia</h3>
+                        <div class="w3-center">
+                            <img src="assets/a3.png" alt="Content" style="width:80px; height:80px;">
+                        </div>
+                        <p>Photography, Content Creator, Social Media</p>
+                        <div class="w3-light-grey w3-round-xlarge">
+                            <div class="w3-container w3-light-green w3-round-xlarge" style="width:88%">88%</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Additional Skills -->
+        <div class="w3-row-padding w3-margin-top">
+            <div class="w3-half">
+                <h4>Frontend Development</h4>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-container w3-light-green w3-round-xlarge" style="width:80%">80%</div>
+                </div>
+                
+                <h4 class="w3-margin-top">Responsive Design</h4>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-container w3-light-green w3-round-xlarge" style="width:88%">88%</div>
+                </div>
+            </div>
+            
+            <div class="w3-half">
+                <h4>Problem Solving</h4>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-container w3-light-green w3-round-xlarge" style="width:92%">92%</div>
+                </div>
+                
+                <h4 class="w3-margin-top">Project Management</h4>
+                <div class="w3-light-grey w3-round-xlarge">
+                    <div class="w3-container w3-light-green w3-round-xlarge" style="width:70%">70%</div>
+                </div>
+            </div>
+        </div>
     </div>
 
-  <!--konten utama-->
-    <div style="padding: 5%;">
-      <span></span>
+    <!-- Donate Section -->
+    <div id="donate-section" class="w3-container w3-padding-64 w3-light-grey">
+        <div class="w3-content">
+            <h2 class="w3-center w3-wide">Support My Work</h2>
+            <p class="w3-center w3-opacity">If you appreciate my work, consider supporting me</p>
+            
+            <div class="w3-row-padding w3-margin-top">
+                <div class="w3-half">
+                    <div class="w3-card w3-white w3-padding">
+                        <div class="w3-container">
+                            <h3 class="w3-center">One-time Donation</h3>
+                            <p class="w3-center">Support me by clicking one of this buttons</p>
+                            <a href="https://saweria.co/mbeknakal" class="w3-button w3-yellow w3-block w3-padding-large w3-margin-top w3-round-large">
+                                Donate via Saweria (ID)
+                            </a>
+                            <a href="https://paypal.me/FarrelAlfariz" class="w3-button w3-blue w3-block w3-padding-large w3-margin-top w3-round-large">
+                                Donate via PayPal (US)
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="w3-half">
+                    <div class="w3-card w3-white w3-padding">
+                        <div class="w3-container">
+                            <h3 class="w3-center">Join Community</h3>
+                            <p class="w3-center">Get access to exclusive content and support</p>
+                            <a href="https://discord.gg/uFACaFguZj" class="w3-button w3-indigo w3-block w3-padding-large w3-margin-top w3-round-large">
+                                Join Discord Server
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 
-    <div style="padding-left: 10%; padding-right: 10%; padding-bottom: 5%;">
-      <a class="w3-btn w3-grey w3-ripple" href="links.html">
-        <img src="assets/a.png" style="width:100%">
-        <p>About this site & links</p>
-      </a>
+    <!-- Contact Section -->
+    <div id="contact-section" class="w3-container w3-padding-64">
+        <div class="w3-content" style="max-width:600px">
+            <h2 class="w3-center w3-wide">Get In Touch</h2>
+            <p class="w3-center w3-opacity">Let's work together or just say hello!</p>
+            
+            <div class="w3-center w3-margin-top">
+                <a href="https://instagram.com/mbek_x64" class="w3-button w3-pink w3-round-large w3-margin">
+                    <i class="fa fa-instagram"></i> Instagram
+                </a>
+                <a href="https://youtube.com/@ngwf" class="w3-button w3-red w3-round-large w3-margin">
+                    <i class="fa fa-youtube"></i> YouTube
+                </a>
+                <a href="mailto:support@mbeek.my.id" class="w3-button contact-btn w3-round-large w3-margin">
+                    <i class="fa fa-envelope"></i> Email
+                </a>
+            </div>
+            
+            <p class="w3-center w3-margin-top w3-small w3-opacity">
+                Feel free to reach out for collaborations, questions, or just to connect!
+            </p>
+        </div>
     </div>
-    <div style="padding-left: 10%; padding-right: 10%; padding-bottom: 5%;">
-      <a class="w3-btn w3-grey w3-ripple" href="tutorials/OBS-screen-record-tutorial.html">
-        <img src="assets/obs.png" style="width:100%">
-        <p>How to screen record using OBS Studio</p>
-      </a>
-    </div>
-    <div style="padding-left: 10%; padding-right: 10%; padding-bottom: 5%;">
-      <a class="w3-btn w3-grey w3-ripple" href="#">
-        <img src="assets/a.png" style="width:100%">
-        <p>How to screenshare Android Phone to PC without HDMI</p>
-      </a>
-    </div>
+
+    <!-- Footer -->
+    <footer class="w3-container w3-gray w3-center w3-padding-32">
+        <div class="w3-content">
+            <p>&copy; 2026 NaughtyGoat. All rights reserved.</p>
+            <p>Built with <a href="https://www.w3schools.com/w3css/" class="w3-text-green">W3.CSS</a> • 
+               <a href="index.html" class="w3-text-green">Home</a> • 
+               <a href="links.html" class="w3-text-green">Links</a></p>
+            <p class="w3-small w3-opacity">"When a goat gets lost to the Internet"</p>
+        </div>
+    </footer>
+
+    <script>
+        // Fungsi untuk menampilkan header/nav menu (dipanggil saat tombol ☰ ditekan)
+        function showHeader() {
+            if (window.innerWidth <= 768) {
+                var hamburgerBtn = document.getElementById('hamburgerBtn');
+                var closeBtn = document.getElementById('closeBtn');
+                var navMenu = document.getElementById('navMenu');
+                
+                console.log('showHeader called');
+                console.log('hamburgerBtn:', hamburgerBtn);
+                console.log('closeBtn:', closeBtn);
+                console.log('navMenu:', navMenu);
+                
+                // Tampilkan nav menu
+                navMenu.classList.add('show');
+                console.log('navMenu classList after add show:', navMenu.classList);
+                
+                // Sembunyikan tombol hamburger, tampilkan tombol close
+                hamburgerBtn.classList.add('hide');
+                closeBtn.classList.add('show');
+                
+                console.log('hamburgerBtn classList:', hamburgerBtn.classList);
+                console.log('closeBtn classList:', closeBtn.classList);
+            } else {
+                console.log('showHeader: not mobile view');
+            }
+        }
+
+        // Fungsi untuk menyembunyikan header/nav menu (dipanggil saat tombol ✕ ditekan)
+        function hideHeader() {
+            if (window.innerWidth <= 768) {
+                var hamburgerBtn = document.getElementById('hamburgerBtn');
+                var closeBtn = document.getElementById('closeBtn');
+                var navMenu = document.getElementById('navMenu');
+                
+                // Sembunyikan nav menu
+                navMenu.classList.remove('show');
+                
+                // Tampilkan tombol hamburger, sembunyikan tombol close
+                hamburgerBtn.classList.remove('hide');
+                closeBtn.classList.remove('show');
+            }
+        }
+
+        // Close menu when clicking outside on mobile
+        document.addEventListener('click', function(event) {
+            var navMenu = document.getElementById('navMenu');
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var closeBtn = document.getElementById('closeBtn');
+            
+            if (window.innerWidth <= 768) {
+                // Jika klik di luar nav menu dan bukan pada tombol hamburger/close
+                if (navMenu && !navMenu.contains(event.target) && 
+                    !hamburgerBtn.contains(event.target) && 
+                    !closeBtn.contains(event.target)) {
+                    
+                    // Sembunyikan nav menu
+                    navMenu.classList.remove('show');
+                    
+                    // Tampilkan tombol hamburger, sembunyikan tombol close
+                    hamburgerBtn.classList.remove('hide');
+                    closeBtn.classList.remove('show');
+                }
+            }
+        });
+
+        // Close menu when clicking on a link
+        document.querySelectorAll('.nav-menu a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                if (window.innerWidth <= 768) {
+                    var navMenu = document.getElementById('navMenu');
+                    var hamburgerBtn = document.getElementById('hamburgerBtn');
+                    var closeBtn = document.getElementById('closeBtn');
+                    
+                    // Sembunyikan nav menu
+                    navMenu.classList.remove('show');
+                    
+                    // Tampilkan tombol hamburger, sembunyikan tombol close
+                    hamburgerBtn.classList.remove('hide');
+                    closeBtn.classList.remove('show');
+                }
+            });
+        });
+
+        // Floating Header
+        window.onscroll = function() {
+            scrollFunction();
+        };
+
+        function scrollFunction() {
+            var header = document.querySelector('.w3-bar.w3-top');
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                header.classList.add('floating');
+                header.style.backgroundColor = '#333';
+            } else {
+                header.classList.remove('floating');
+                header.style.backgroundColor = '';
+            }
+        }
+
+        // Inisialisasi: pastikan tombol close disembunyikan saat pertama kali load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.innerWidth <= 768) {
+                var closeBtn = document.getElementById('closeBtn');
+                closeBtn.classList.remove('show');
+                
+                // Pastikan nav menu disembunyikan saat pertama kali load
+                var navMenu = document.getElementById('navMenu');
+                navMenu.classList.remove('show');
+            }
+        });
+
+    </script>
 </body>
-
-<footer>
-  <!--footer-->
-  <div class="w3-grey w3-bar">
-    <p style="font-size: 10; padding-left: 5px;">&copy; NaughtyGoat - <a href="https://www.w3schools.com/w3css/">W3</a>. <a href="index.html">Go to Home</a></a></p>
-  </div>
-</footer>
 </html>
