@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaughtyGoat - Donate</title>
+    <link rel="stylesheet" href="w3.css">
+    <link rel="shortcut icon" href="assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <meta property="og:title" content="NaughtyGoat - Support My Work" />
+    <meta property="og:description" content="Help support my creative journey and community projects" />
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --glass-bg: rgba(255, 255, 255, 0.05);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+
+        body {
+            background-color: #0d0d0d;
+            overflow-x: hidden;
+        }
+
+        .section-title {
+            padding-bottom: 10px;
+            margin-bottom: 30px;
+        }
+
+        .hero-section {
+            background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        /* Donation Accordion Specialized Styles */
+        .accordion-item {
+            border: 1px solid var(--glass-border) !important;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+
+        .accordion-item:hover {
+            border-color: rgba(76, 175, 80, 0.5) !important;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5) !important;
+        }
+
+        .accordion-header {
+            background: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            outline: none;
+        }
+
+        .accordion-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+        }
+
+        .accordion-header .icon-box {
+            width: 40px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+            transition: all 0.3s;
+        }
+
+        .accordion-item:hover .icon-box {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .chevron {
+            transition: transform 0.3s;
+        }
+
+        .accordion-item.active .chevron {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            display: none;
+            overflow: hidden;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .accordion-item.active .accordion-content {
+            display: block;
+        }
+
+        .qr-display {
+            display: inline-block;
+            margin: 20px 0;
+        }
+
+        .qr-img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 8px;
+        }
+
+        .btn-donate {
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .btn-donate:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Mobile Navigation Styles (copy from links.html) */
+        .mobile-menu-btn,
+        .close-header-btn {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 0;
+            z-index: 1001;
+            font-size: 24px;
+            padding: 8px 16px;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .mobile-menu-btn {
+            background-color: #4CAF50;
+        }
+
+        .close-header-btn {
+            background-color: #f44336;
+        }
+
+        @media screen and (max-width: 768px) {
+
+            .mobile-menu-btn,
+            .close-header-btn {
+                display: block;
+                position: fixed;
+                top: 0;
+                right: 0;
+                height: 50px;
+                width: 50px;
+                z-index: 1003;
+            }
+
+            .close-header-btn {
+                display: none;
+            }
+
+            .close-header-btn.show {
+                display: block;
+            }
+
+            .mobile-menu-btn.hide {
+                display: none;
+            }
+
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: fixed;
+                top: 50px;
+                left: 0;
+                background-color: #333;
+                z-index: 1002;
+            }
+
+            .nav-menu.show {
+                display: flex;
+            }
+
+            .nav-menu a {
+                padding: 15px;
+                border-bottom: 1px solid #444;
+                text-decoration: none;
+                color: white;
+                text-align: center;
+            }
+
+            .w3-bar.w3-gray.w3-top {
+                height: 50px;
+                background-color: #333 !important;
+            }
+
+            .hero-section {
+                padding-top: 60px;
+            }
+        }
+
+        .w3-bar.w3-top.floating {
+            background-color: #333 !important;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body class="w3-black">
+
+    <!-- Header Navigation -->
+    <div class="w3-bar w3-gray w3-top" id="mainHeader" style="position: relative;">
+        <button class="mobile-menu-btn" id="hamburgerBtn" onclick="showHeader()">☰</button>
+        <button class="close-header-btn" id="closeBtn" onclick="hideHeader()">✕</button>
+        <div class="nav-menu" id="navMenu">
+            <a href="index.html" class="w3-bar-item w3-button w3-mobile">Home</a>
+            <a href="links.html" class="w3-bar-item w3-button w3-mobile">Links</a>
+            <a href="https://blog.mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Blog</a>
+            <a href="donate.html" class="w3-bar-item w3-button w3-mobile w3-light-green">Donate</a>
+            <a href="mailto:support@mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="w3-container w3-content" style="max-width:800px">
+            <img src="assets/logo.png" alt="NaughtyGoat Logo" class="w3-circle"
+                style="width:120px; height:120px; margin-bottom:20px;">
+            <h1 class="w3-xxlarge w3-wide"><b>NaughtyGoat</b></h1>
+            <p class="w3-medium">For anybody who wants to support my work. (thank you btw :3)</p>
+        </div>
+    </div>
+
+    <!-- Donation Options Section -->
+    <div class="w3-container w3-padding-32">
+        <div class="w3-content" style="max-width:800px">
+            <h2 class="w3-wide section-title w3-border-green w3-bottombar">Choose Your Method</h2>
+
+            <div class="accordion-container w3-margin-top">
+
+                <!-- Option 1: QR Code -->
+                <div class="accordion-item w3-card w3-round-large w3-margin-bottom" id="qr-option">
+                    <button class="accordion-header w3-button w3-block w3-left-align w3-padding-24"
+                        onclick="toggleAccordion('qr-option')">
+                        <h3 class="w3-large">
+                            <span class="icon-box w3-round w3-center"><i class="fa fa-qrcode"></i></span>
+                            QR Code (Qris / Digital Wallet)
+                        </h3>
+                        <span class="chevron"><i class="fa fa-chevron-down"></i></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="content-body w3-center w3-padding-large">
+                            <p class="w3-text-light-gray">Scan this QR code using your favorite digital wallet (Gopay,
+                                OVO, Dana, LinkAja, or Banking Apps).</p>
+                            <div class="qr-display w3-white w3-padding w3-card-4 w3-round-large">
+                                <img src="assets/qr-donate.png" alt="QR Code Donation" class="qr-img"
+                                    style="width:300px;">
+                            </div>
+                            <p class="w3-small w3-opacity">QRIS dynamic supported for all Indonesian digital payments.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option 2: Saweria -->
+                <div class="accordion-item w3-card w3-round-large w3-margin-bottom" id="saweria-option">
+                    <button class="accordion-header w3-button w3-block w3-left-align w3-padding-24"
+                        onclick="toggleAccordion('saweria-option')">
+                        <h3 class="w3-large">
+                            <span class="icon-box w3-round w3-center"><i class="fa fa-money"></i></span>
+                            Saweria (Local IDR)
+                        </h3>
+                        <span class="chevron"><i class="fa fa-chevron-down"></i></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="content-body w3-padding-large">
+                            <p class="w3-text-light-gray">Saweria allows you to donate using local Indonesian payment
+                                methods with custom overlays and alerts during livestreams.</p>
+                            <ul class="w3-ul w3-border-0">
+                                <li class="w3-border-0"><i class="fa fa-check w3-text-green"></i> Supports Gopay, OVO,
+                                    Dana, LinkAja, and QRIS.</li>
+                                <li class="w3-border-0"><i class="fa fa-check w3-text-green"></i> Add a custom message
+                                    that appears in the feed.</li>
+                                <li class="w3-border-0"><i class="fa fa-check w3-text-green"></i> Instant notification
+                                    for the creator.</li>
+                            </ul>
+                            <a href="https://saweria.co/mbeknakal" target="_blank"
+                                class="w3-button w3-orange w3-text-white w3-round-large w3-margin-top w3-padding-large btn-donate">
+                                <i class="fa fa-external-link"></i> Donate via Saweria
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Option 3: PayPal -->
+                <div class="accordion-item w3-card w3-round-large w3-margin-bottom" id="paypal-option">
+                    <button class="accordion-header w3-button w3-block w3-left-align w3-padding-24"
+                        onclick="toggleAccordion('paypal-option')">
+                        <h3 class="w3-large">
+                            <span class="icon-box w3-round w3-center"><i class="fa fa-paypal"></i></span>
+                            PayPal (International / USD)
+                        </h3>
+                        <span class="chevron"><i class="fa fa-chevron-down"></i></span>
+                    </button>
+                    <div class="accordion-content">
+                        <div class="content-body w3-padding-large">
+                            <p class="w3-text-light-gray">If you are outside Indonesia or prefer using international
+                                currency, PayPal is the best option.</p>
+                            <ul class="w3-ul w3-border-0">
+                                <li class="w3-border-0"><i class="fa fa-check w3-text-blue"></i> Supports Credit Cards
+                                    and PayPal Balance.</li>
+                                <li class="w3-border-0"><i class="fa fa-check w3-text-blue"></i> Fast and secure
+                                    international transactions.</li>
+                                <li class="w3-border-0"><i class="fa fa-check w3-text-blue"></i> Safe for both donor and
+                                    creator.</li>
+                            </ul>
+                            <a href="https://paypal.me/FarrelAlfariz" target="_blank"
+                                class="w3-button w3-blue w3-round-large w3-margin-top w3-padding-large btn-donate">
+                                <i class="fa fa-paypal"></i> Donate via PayPal
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="w3-padding-64 w3-center">
+                <p class="w3-opacity">"Thank you for being part of this journey. Every contribution, no matter the size,
+                    makes a difference."</p>
+                <a href="index.html" class="w3-button w3-border w3-border-green w3-round-large w3-hover-green">Back to
+                    Home</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="w3-container w3-dark-grey w3-center w3-padding-32">
+        <div class="w3-content">
+            <p>&copy; 2026 NaughtyGoat. All rights reserved.</p>
+            <p>Built with <a href="https://www.w3schools.com/w3css/" class="w3-text-green">W3.CSS</a> •
+                <a href="index.html" class="w3-text-green">Home</a> •
+                <a href="links.html" class="w3-text-green">Links</a> •
+                <a href="donate.html" class="w3-text-green">Donate</a>
+            </p>
+            <p class="w3-small w3-opacity">"When a goat gets lost to the Internet"</p>
+        </div>
+    </footer>
+
+    <script>
+        // Accordion Toggle Function
+        function toggleAccordion(id) {
+            const element = document.getElementById(id);
+            const isActive = element.classList.contains('active');
+
+            // Close all other accordions
+            document.querySelectorAll('.accordion-item').forEach(item => {
+                item.classList.remove('active');
+            });
+
+            if (!isActive) {
+                element.classList.add('active');
+            }
+        }
+
+        // Mobile Header Functions
+        function showHeader() {
+            var navMenu = document.getElementById('navMenu');
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var closeBtn = document.getElementById('closeBtn');
+            navMenu.classList.add('show');
+            hamburgerBtn.classList.add('hide');
+            closeBtn.classList.add('show');
+        }
+
+        function hideHeader() {
+            var navMenu = document.getElementById('navMenu');
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var closeBtn = document.getElementById('closeBtn');
+            navMenu.classList.remove('show');
+            hamburgerBtn.classList.remove('hide');
+            closeBtn.classList.remove('show');
+        }
+
+        // Floating Header on Scroll
+        window.onscroll = function () {
+            var header = document.querySelector('.w3-bar.w3-top');
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                header.classList.add('floating');
+            } else {
+                header.classList.remove('floating');
+            }
+        };
+
+        // Close menu on click outside
+        document.addEventListener('click', function (event) {
+            if (window.innerWidth <= 768) {
+                var navMenu = document.getElementById('navMenu');
+                var hamburgerBtn = document.getElementById('hamburgerBtn');
+                if (!navMenu.contains(event.target) && !hamburgerBtn.contains(event.target) && navMenu.classList.contains('show')) {
+                    hideHeader();
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

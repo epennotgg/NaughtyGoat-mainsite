@@ -1,0 +1,195 @@
+<!-- 
+
+ █████╗ ███╗   ███╗███████╗   ██╗██████╗ 
+██╔══██╗████╗ ████║██╔════╝   ██║██╔══██╗
+███████║██╔████╔██║█████╗     ██║██║  ██║
+██╔══██║██║╚██╔╝██║██╔══╝     ██║██║  ██║
+██║  ██║██║ ╚═╝ ██║███████╗██╗██║██████╔╝
+╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝╚═╝╚═════╝ 
+ 
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NaughtyGoat HQ</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <link rel="shortcut icon" href="../../../assets/logo.png">
+</head>
+
+<body onload="initApp()">
+
+    <!-- Dynamic Background Container -->
+    <div id="bg-container" class="bg-container"></div>
+
+    <!-- Onboarding / First-Meet Mode Modal -->
+    <div id="onboarding-overlay" class="onboarding-overlay">
+        <div class="onboarding-card">
+            <h2>Welcome to NaughtyGoat</h2>
+            <p>Let's personalize your setup</p>
+            <form id="onboarding-form" onsubmit="saveFirstMeet(event)">
+                <div class="input-group">
+                    <label for="ob-name">What should we call you? *</label>
+                    <input type="text" id="ob-name" placeholder="Your Name" required autocomplete="off">
+                </div>
+
+                <div class="input-group">
+                    <label for="ob-wallpaper">Custom Wallpaper (Optional)</label>
+                    <input type="text" id="ob-wallpaper"
+                        placeholder="Image, GIF, or Video URL (leave blank for default)" autocomplete="off">
+                    <span class="file-upload-desc">Or upload a local file:</span>
+                    <input type="file" id="ob-wallpaper-file" accept="image/*,video/*">
+                </div>
+
+                <div class="checkbox-group">
+                    <input type="checkbox" id="ob-default-shortcuts" checked>
+                    <label for="ob-default-shortcuts">Use default shortcuts (Spotify, YouTube, Discord, Gmail,
+                        WhatsApp)</label>
+                </div>
+
+                <button type="submit" class="primary-btn">Get Started</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main Dashboard Container -->
+    <div id="dashboard" class="dashboard-container">
+        <!-- Center Column -->
+        <main class="main-content">
+            <!-- Header Section -->
+            <header class="greeting-header">
+                <h1 id="greeting-text">Good Morning, {Name}</h1>
+                <p id="time-meta" class="time-meta">
+                    <span id="date-part">YY/MM/DD</span>
+                    <span id="time-part">HH:MM:SS</span>
+                    <span class="meta-divider">|</span>
+                    <span id="battery-part">100%</span>
+                </p>
+            </header>
+
+            <!-- Search Section -->
+            <div class="search-wrapper">
+                <div class="search-box">
+                    <button class="search-engine-toggle" id="engine-toggle-btn" onclick="toggleEngineMenu()"
+                        title="Click to change search engine">
+                        <span id="current-engine-icon">&#128269;</span>
+                    </button>
+                    <input type="text" id="search-input" placeholder="Type here (enter to search)" autocomplete="off"
+                        autofocus onkeypress="handleSearchKeyPress(event)">
+                </div>
+                <!-- Search Engine Popup -->
+                <div id="engine-dropdown" class="engine-dropdown">
+                    <button onclick="setSearchEngine('Google')" class="engine-opt">
+                        <img src="https://www.google.com/s2/favicons?domain=google.com&sz=64" alt="Google"> Google
+                    </button>
+                    <button onclick="setSearchEngine('Bing')" class="engine-opt">
+                        <img src="https://www.google.com/s2/favicons?domain=bing.com&sz=64" alt="Bing"> Bing
+                    </button>
+                    <button onclick="setSearchEngine('DuckDuckGo')" class="engine-opt">
+                        <img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=64" alt="DuckDuckGo"> DuckDuckGo
+                    </button>
+                    <button onclick="setSearchEngine('Brave')" class="engine-opt">
+                        <img src="https://www.google.com/s2/favicons?domain=search.brave.com&sz=64" alt="Brave"> Brave
+                    </button>
+                </div>
+            </div>
+
+            <!-- Shortcuts Container (Customizable lines) -->
+            <div class="shortcuts-container">
+                <div id="shortcut-line-1" class="shortcut-line"></div>
+                <div id="shortcut-line-2" class="shortcut-line"></div>
+                <div id="shortcut-line-3" class="shortcut-line"></div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Right Drawer Settings -->
+    <div id="settings-drawer" class="settings-drawer">
+        <div class="settings-header">
+            <h3>Home Settings</h3>
+            <button onclick="toggleSettings()" class="drawer-close-btn">&times;</button>
+        </div>
+        <div class="settings-body">
+            <div class="settings-section">
+                <label for="settings-name">What we can call you?</label>
+                <input type="text" id="settings-name" onchange="updateNameSetting()" autocomplete="off">
+            </div>
+
+            <div class="settings-section">
+                <label>Change Wallpaper</label>
+                <span class="sub-label">{Images, GIF, and video supported}</span>
+                <input type="text" id="settings-wp-url" placeholder="Enter wallpaper URL..."
+                    onchange="updateWallpaperURL()" autocomplete="off">
+                <span class="file-upload-desc">Or upload local file:</span>
+                <input type="file" id="settings-wp-file" accept="image/*,video/*"
+                    onchange="handleWallpaperUpload(event)">
+                <button onclick="resetWallpaper()" class="danger-btn">Reset Wallpaper {revert to default}</button>
+            </div>
+
+            <!-- Shortcut Manager Section -->
+            <div class="settings-section shortcuts-manager">
+                <label>Shortcut Lines</label>
+
+                <div class="line-manager">
+                    <h4>Shortcut Line 1</h4>
+                    <div id="sm-line-1-list" class="sm-shortcut-list"></div>
+                    <button onclick="openAddShortcutModal(1)" class="secondary-btn">+ Add Shortcut</button>
+                </div>
+
+                <div class="line-manager">
+                    <h4>Shortcut Line 2</h4>
+                    <div id="sm-line-2-list" class="sm-shortcut-list"></div>
+                    <button onclick="openAddShortcutModal(2)" class="secondary-btn">+ Add Shortcut</button>
+                </div>
+
+                <div class="line-manager">
+                    <h4>Shortcut Line 3</h4>
+                    <div id="sm-line-3-list" class="sm-shortcut-list"></div>
+                    <button onclick="openAddShortcutModal(3)" class="secondary-btn">+ Add Shortcut</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- Toggle Drawer Button -->
+    <button id="drawer-toggle" class="drawer-toggle-btn" onclick="toggleSettings()" title="Settings">
+        <span id="drawer-toggle-icon">&lt;</span>
+    </button>
+
+    <!-- Add Shortcut Modal -->
+    <div id="add-shortcut-modal" class="modal-overlay">
+        <div class="modal-card">
+            <h3>Add New Shortcut</h3>
+            <form onsubmit="saveNewShortcut(event)">
+                <input type="hidden" id="as-line-id">
+                <div class="input-group">
+                    <label for="as-name">Name</label>
+                    <input type="text" id="as-name" placeholder="e.g. YouTube" required autocomplete="off">
+                </div>
+                <div class="input-group">
+                    <label for="as-url">URL</label>
+                    <input type="url" id="as-url" placeholder="e.g. https://youtube.com" required autocomplete="off">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" onclick="closeAddShortcutModal()" class="cancel-btn">Cancel</button>
+                    <button type="submit" class="primary-btn">Add</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Script at the end -->
+    <script src="script.js"></script>
+</body>
+
+</html>

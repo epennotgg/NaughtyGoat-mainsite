@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,16 +15,24 @@
             transition: all 0.3s;
             margin-bottom: 15px;
         }
+
         .link-card:hover {
             transform: translateX(5px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
+
         .section-title {
             border-bottom: 2px solid #4CAF50;
             padding-bottom: 10px;
             margin-bottom: 30px;
         }
-        
+
+        .hero-section {
+            background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
         /* Mobile Navigation Styles */
         .mobile-menu-btn {
             display: none;
@@ -94,7 +103,7 @@
                 left: 0;
                 background-color: #333;
                 z-index: 1002;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
             }
 
             .nav-menu.show {
@@ -114,7 +123,7 @@
             .nav-menu a:hover {
                 background-color: #444;
             }
-            
+
             .w3-bar.w3-gray.w3-top {
                 position: fixed;
                 top: 0;
@@ -132,23 +141,25 @@
                 padding-top: 0;
                 margin-top: 0;
             }
-            
-            .w3-container.w3-padding-64.w3-center {
+
+            .hero-section {
                 padding-top: 60px;
             }
-            
+
             /* Pastikan konten di bawah nav menu */
             .w3-container {
                 position: relative;
                 z-index: 1;
             }
         }
+
         /* Floating Header */
         .w3-bar.w3-top.floating {
             position: fixed;
             width: 100%;
             box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
         }
+
         /* Style adjustments as needed */
         .w3-bar.w3-top.floating {
             background-color: #444 !important;
@@ -156,6 +167,7 @@
         }
     </style>
 </head>
+
 <body class="w3-black">
 
     <!-- Header Navigation -->
@@ -170,31 +182,33 @@
             <a href="index.html" class="w3-bar-item w3-button w3-mobile">Home</a>
             <a href="links.html" class="w3-bar-item w3-button w3-mobile w3-light-green">Links</a>
             <a href="https://blog.mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Blog</a>
-            <a href="https://saweria.co/mbeknakal" class="w3-bar-item w3-button w3-mobile">Donate</a>
+            <a href="donate.html" class="w3-bar-item w3-button w3-mobile">Donate</a>
             <a href="mailto:support@mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Contact</a>
         </div>
     </div>
 
-    <!-- Title and Subtitle -->
-    <div class="w3-container w3-padding-64 w3-center">
-        <div class="w3-content" style="max-width:800px">
-            <img src="assets/logo1.png" alt="NaughtyGoat Logo" class="w3-circle" style="width:100px; height:100px; margin-bottom:20px;">
-            <h1 class="w3-xxlarge w3-wide">NaughtyGoat Links</h1>
-            <p class="w3-large w3-opacity">All my social media, communities, and important connections in one place</p>
-            <p class="w3-medium">Find me across the internet and join my communities</p>
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="w3-container w3-content" style="max-width:800px">
+            <img src="assets/logo.png" alt="NaughtyGoat Logo" class="w3-circle"
+                style="width:120px; height:120px; margin-bottom:20px;">
+            <h1 class="w3-xxlarge w3-wide"><b>NaughtyGoat Links</b></h1>
+            <p class="w3-medium">Here are my personal and business links. Thank you for using my links as a reference!
+            </p>
         </div>
     </div>
 
     <!-- Links Section -->
     <div class="w3-container w3-padding-32">
         <div class="w3-content" style="max-width:800px">
-            
+
             <!-- Social Media Links -->
             <div class="w3-margin-bottom">
                 <h2 class="w3-wide section-title">Social Media</h2>
-                
+
                 <div class="link-card">
-                    <a href="https://instagram.com/mbek_x64" class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-pink w3-hover-pink">
+                    <a href="https://instagram.com/mbek_x64"
+                        class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-pink w3-hover-pink">
                         <div class="w3-row">
                             <div class="w3-col" style="width:50px">
                                 <span class="w3-xlarge">📸</span>
@@ -208,7 +222,8 @@
                 </div>
 
                 <div class="link-card">
-                    <a href="https://youtube.com/@ngwf?sub_confirmation=1" class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-red w3-hover-red">
+                    <a href="https://youtube.com/@ngwf?sub_confirmation=1"
+                        class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-red w3-hover-red">
                         <div class="w3-row">
                             <div class="w3-col" style="width:50px">
                                 <span class="w3-xlarge">🎬</span>
@@ -222,7 +237,8 @@
                 </div>
 
                 <div class="link-card">
-                    <a href="https://discord.gg/HJdzuDU" class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-blue w3-hover-blue">
+                    <a href="https://discord.gg/HJdzuDU"
+                        class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-blue w3-hover-blue">
                         <div class="w3-row">
                             <div class="w3-col" style="width:50px">
                                 <span class="w3-xlarge">💬</span>
@@ -239,30 +255,18 @@
             <!-- Support & Donation Links -->
             <div class="w3-margin-bottom">
                 <h2 class="w3-wide section-title">Support & Donation</h2>
-                
-                <div class="link-card">
-                    <a href="https://paypal.me/FarrelAlfariz" class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-blue w3-hover-blue">
-                        <div class="w3-row">
-                            <div class="w3-col" style="width:50px">
-                                <span class="w3-xlarge">💸</span>
-                            </div>
-                            <div class="w3-rest">
-                                <h4>Donate Via PayPal</h4>
-                                <p class="w3-small w3-opacity">If you are from foreign country, feel free to donate here</p>
-                            </div>
-                        </div>
-                    </a>
-                </div>
 
                 <div class="link-card">
-                    <a href="https://saweria.co/mbeknakal" class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-yellow w3-hover-yellow">
+                    <a href="donate.html"
+                        class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-green w3-hover-green">
                         <div class="w3-row">
                             <div class="w3-col" style="width:50px">
-                                <span class="w3-xlarge">💰</span>
+                                <span class="w3-xlarge">🎁</span>
                             </div>
                             <div class="w3-rest">
-                                <h4>Donate via Saweria</h4>
-                                <p class="w3-small w3-opacity">Support my work with one-time donations (IDR)</p>
+                                <h4>Support & Charities</h4>
+                                <p class="w3-small w3-opacity">View all available donation methods (QRIS, Saweria,
+                                    PayPal)</p>
                             </div>
                         </div>
                     </a>
@@ -274,7 +278,8 @@
                 <h2 class="w3-wide section-title">Partners & Communities</h2>
 
                 <div class="link-card">
-                    <a href="https://discord.gg/cKQtj44Z7c" class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-red w3-hover-red">
+                    <a href="https://discord.gg/cKQtj44Z7c"
+                        class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-red w3-hover-red">
                         <div class="w3-row">
                             <div class="w3-col" style="width:50px">
                                 <span class="w3-xlarge">🤝</span>
@@ -288,14 +293,31 @@
                 </div>
 
                 <div class="link-card">
-                    <a href="https://ngd.my.id/AxTstore" class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-pale-yellow w3-hover-pale-yellow">
+                    <a href="https://ngd.my.id/AxTstore"
+                        class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-pale-yellow w3-hover-pale-yellow">
                         <div class="w3-row">
                             <div class="w3-col" style="width:50px">
                                 <span class="w3-xlarge">🛒</span>
                             </div>
                             <div class="w3-rest">
                                 <h4>Axint Digital Store</h4>
-                                <p class="w3-small w3-opacity">Best place for finding cheap digital items and services</p>
+                                <p class="w3-small w3-opacity">Best place for finding cheap digital items and services
+                                </p>
+                            </div>
+                        </div>
+                    </a>
+                </div>
+                <div class="link-card">
+                    <a href="https://billing.alstore.space/aff/NAMNAL"
+                        class="w3-btn w3-block w3-left-align w3-padding-large w3-border w3-border-red w3-hover-red">
+                        <div class="w3-row">
+                            <div class="w3-col" style="width:50px">
+                                <span class="w3-xlarge">🖥️</span>
+                            </div>
+                            <div class="w3-rest">
+                                <h4>Alstore Hosting</h4>
+                                <p class="w3-small w3-opacity">Buy Minecraft server hosting at affordable prices!
+                                </p>
                             </div>
                         </div>
                     </a>
@@ -306,12 +328,13 @@
     </div>
 
     <!-- Footer -->
-    <footer class="w3-container w3-gray w3-center w3-padding-32">
+    <footer class="w3-container w3-dark-grey w3-center w3-padding-32">
         <div class="w3-content">
             <p>&copy; 2026 NaughtyGoat. All rights reserved.</p>
-            <p>Built with <a href="https://www.w3schools.com/w3css/" class="w3-text-green">W3.CSS</a> • 
-               <a href="index.html" class="w3-text-green">Home</a> • 
-               <a href="links.html" class="w3-text-green">Links</a></p>
+            <p>Built with <a href="https://www.w3schools.com/w3css/" class="w3-text-green">W3.CSS</a> •
+                <a href="index.html" class="w3-text-green">Home</a> •
+                <a href="links.html" class="w3-text-green">Links</a>
+            </p>
             <p class="w3-small w3-opacity">"When a goat gets lost to the Internet"</p>
         </div>
     </footer>
@@ -323,10 +346,10 @@
                 var hamburgerBtn = document.getElementById('hamburgerBtn');
                 var closeBtn = document.getElementById('closeBtn');
                 var navMenu = document.getElementById('navMenu');
-                
+
                 // Tampilkan nav menu
                 navMenu.classList.add('show');
-                
+
                 // Sembunyikan tombol hamburger, tampilkan tombol close
                 hamburgerBtn.classList.add('hide');
                 closeBtn.classList.add('show');
@@ -339,10 +362,10 @@
                 var hamburgerBtn = document.getElementById('hamburgerBtn');
                 var closeBtn = document.getElementById('closeBtn');
                 var navMenu = document.getElementById('navMenu');
-                
+
                 // Sembunyikan nav menu
                 navMenu.classList.remove('show');
-                
+
                 // Tampilkan tombol hamburger, sembunyikan tombol close
                 hamburgerBtn.classList.remove('hide');
                 closeBtn.classList.remove('show');
@@ -350,20 +373,20 @@
         }
 
         // Close menu when clicking outside on mobile
-        document.addEventListener('click', function(event) {
+        document.addEventListener('click', function (event) {
             var navMenu = document.getElementById('navMenu');
             var hamburgerBtn = document.getElementById('hamburgerBtn');
             var closeBtn = document.getElementById('closeBtn');
-            
+
             if (window.innerWidth <= 768) {
                 // Jika klik di luar nav menu dan bukan pada tombol hamburger/close
-                if (navMenu && !navMenu.contains(event.target) && 
-                    !hamburgerBtn.contains(event.target) && 
+                if (navMenu && !navMenu.contains(event.target) &&
+                    !hamburgerBtn.contains(event.target) &&
                     !closeBtn.contains(event.target)) {
-                    
+
                     // Sembunyikan nav menu
                     navMenu.classList.remove('show');
-                    
+
                     // Tampilkan tombol hamburger, sembunyikan tombol close
                     hamburgerBtn.classList.remove('hide');
                     closeBtn.classList.remove('show');
@@ -372,16 +395,16 @@
         });
 
         // Close menu when clicking on a link
-        document.querySelectorAll('.nav-menu a').forEach(function(link) {
-            link.addEventListener('click', function() {
+        document.querySelectorAll('.nav-menu a').forEach(function (link) {
+            link.addEventListener('click', function () {
                 if (window.innerWidth <= 768) {
                     var navMenu = document.getElementById('navMenu');
                     var hamburgerBtn = document.getElementById('hamburgerBtn');
                     var closeBtn = document.getElementById('closeBtn');
-                    
+
                     // Sembunyikan nav menu
                     navMenu.classList.remove('show');
-                    
+
                     // Tampilkan tombol hamburger, sembunyikan tombol close
                     hamburgerBtn.classList.remove('hide');
                     closeBtn.classList.remove('show');
@@ -390,7 +413,7 @@
         });
 
         // Floating Header
-        window.onscroll = function() {
+        window.onscroll = function () {
             scrollFunction();
         };
 
@@ -406,11 +429,11 @@
         }
 
         // Inisialisasi: pastikan tombol close disembunyikan saat pertama kali load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             if (window.innerWidth <= 768) {
                 var closeBtn = document.getElementById('closeBtn');
                 closeBtn.classList.remove('show');
-                
+
                 // Pastikan nav menu disembunyikan saat pertama kali load
                 var navMenu = document.getElementById('navMenu');
                 navMenu.classList.remove('show');
@@ -419,4 +442,5 @@
 
     </script>
 </body>
+
 </html>
