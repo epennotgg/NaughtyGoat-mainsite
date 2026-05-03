@@ -25,8 +25,63 @@ function initApp() {
     startTime();
 }
 
+// IndexedDB Helper Functions
+function initDB() {
+    return new Promise((resolve, reject) => {
+        const request = indexedDB.open('crod_db', 1);
+        request.onupgradeneeded = function (e) {
+            const db = e.target.result;
+            if (!db.objectStoreNames.contains('wallpapers')) {
+                db.createObjectStore('wallpapers');
+            }
+        };
+        request.onsuccess = function (e) {
+            resolve(e.target.result);
+        };
+        request.onerror = function (e) {
+            reject(e.target.error);
+        };
+    });
+}
+
+function saveFileToIDB(file) {
+    return initDB().then(db => {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction('wallpapers', 'readwrite');
+            const store = tx.objectStore('wallpapers');
+            const req = store.put(file, 'custom_wallpaper');
+            req.onsuccess = () => resolve();
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
+function getFileFromIDB() {
+    return initDB().then(db => {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction('wallpapers', 'readonly');
+            const store = tx.objectStore('wallpapers');
+            const req = store.get('custom_wallpaper');
+            req.onsuccess = () => resolve(req.result);
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
+function clearIDB() {
+    return initDB().then(db => {
+        return new Promise((resolve, reject) => {
+            const tx = db.transaction('wallpapers', 'readwrite');
+            const store = tx.objectStore('wallpapers');
+            const req = store.delete('custom_wallpaper');
+            req.onsuccess = () => resolve();
+            req.onerror = () => reject(req.error);
+        });
+    });
+}
+
 // Save first meet details
-function saveFirstMeet(event) {
+async function saveFirstMeet(event) {
     event.preventDefault();
     const nameInput = document.getElementById('ob-name').value.trim();
     if (!nameInput) return;
@@ -38,16 +93,18 @@ function saveFirstMeet(event) {
     const wpFile = document.getElementById('ob-wallpaper-file').files[0];
 
     if (wpFile) {
-        const reader = new FileReader();
-        reader.onload = function (e) {
-            localStorage.setItem('crod_wallpaper', e.target.result);
-            localStorage.setItem('crod_wallpaper_type', wpFile.type.startsWith('video') ? 'video' : 'image');
-            applyWallpaper(e.target.result, wpFile.type.startsWith('video') ? 'video' : 'image');
-        };
-        reader.readAsDataURL(wpFile);
+        const type = wpFile.type.startsWith('video') ? 'video' : 'image';
+        try {
+            await saveFileToIDB(wpFile);
+            localStorage.setItem('crod_wallpaper', 'indexeddb');
+            localStorage.setItem('crod_wallpaper_type', type);
+            const blobUrl = URL.createObjectURL(wpFile);
+            applyWallpaper(blobUrl, type);
+        } catch (err) {
+            console.error('Failed to save to IndexedDB:', err);
+        }
     } else if (wpUrl) {
         localStorage.setItem('crod_wallpaper', wpUrl);
-        // guess type by ext or default to image
         const type = wpUrl.match(/\.(mp4|webm|ogg)/i) ? 'video' : 'image';
         localStorage.setItem('crod_wallpaper_type', type);
         applyWallpaper(wpUrl, type);
@@ -79,7 +136,7 @@ function saveFirstMeet(event) {
 }
 
 // Load and apply all settings
-function loadSettings() {
+async function loadSettings() {
     const storedName = localStorage.getItem('crod_user_name');
     if (storedName) {
         document.getElementById('settings-name').value = storedName;
@@ -88,7 +145,23 @@ function loadSettings() {
     // Load custom wallpaper
     const storedWp = localStorage.getItem('crod_wallpaper') || defaultWallpapers;
     const storedWpType = localStorage.getItem('crod_wallpaper_type') || 'image';
-    applyWallpaper(storedWp, storedWpType);
+
+    if (storedWp === 'indexeddb') {
+        try {
+            const file = await getFileFromIDB();
+            if (file) {
+                const blobUrl = URL.createObjectURL(file);
+                applyWallpaper(blobUrl, storedWpType);
+            } else {
+                applyWallpaper(defaultWallpapers, 'image');
+            }
+        } catch (err) {
+            console.error('Failed to load from IDB:', err);
+            applyWallpaper(defaultWallpapers, 'image');
+        }
+    } else {
+        applyWallpaper(storedWp, storedWpType);
+    }
 
     // Load shortcuts
     const storedShortcuts = localStorage.getItem('crod_shortcuts');
@@ -371,25 +444,32 @@ function updateWallpaperURL() {
     applyWallpaper(val, type);
 }
 
-function handleWallpaperUpload(event) {
+async function handleWallpaperUpload(event) {
     const file = event.target.files[0];
     if (!file) return;
 
     const type = file.type.startsWith('video') ? 'video' : 'image';
-    const reader = new FileReader();
-    reader.onload = function (e) {
-        localStorage.setItem('crod_wallpaper', e.target.result);
+    try {
+        await saveFileToIDB(file);
+        localStorage.setItem('crod_wallpaper', 'indexeddb');
         localStorage.setItem('crod_wallpaper_type', type);
-        applyWallpaper(e.target.result, type);
-    };
-    reader.readAsDataURL(file);
+        const blobUrl = URL.createObjectURL(file);
+        applyWallpaper(blobUrl, type);
+    } catch (err) {
+        console.error('Failed to save to IndexedDB:', err);
+    }
 }
 
-function resetWallpaper() {
+async function resetWallpaper() {
     localStorage.setItem('crod_wallpaper', defaultWallpapers);
     localStorage.setItem('crod_wallpaper_type', 'image');
     document.getElementById('settings-wp-url').value = '';
     document.getElementById('settings-wp-file').value = '';
+    try {
+        await clearIDB();
+    } catch (err) {
+        console.error('Failed to clear IDB:', err);
+    }
     applyWallpaper(defaultWallpapers, 'image');
 }
 
