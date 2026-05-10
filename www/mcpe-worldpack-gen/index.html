@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MCBE World Pack JSON Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="background-anim"></div>
+    <div class="container">
+        <header>
+            <h1>MCBE <span>PackGen</span></h1>
+            <p>Generate world_behavior_packs.json or world_resource_packs.json easily.</p>
+        </header>
+
+        <main>
+            <div class="controls-top">
+                <button id="add-pack-btn" class="btn primary"><i class="fas fa-plus"></i> Add Pack</button>
+                <button id="clear-all-btn" class="btn danger"><i class="fas fa-trash"></i> Clear All</button>
+            </div>
+
+            <div id="pack-list" class="pack-list">
+                <!-- Pack items will be injected here -->
+            </div>
+
+            <div class="action-section">
+                <button id="generate-btn" class="btn success btn-large"><i class="fas fa-code"></i> Generate
+                    JSON</button>
+            </div>
+
+            <div class="result-section">
+                <div class="result-header">
+                    <h2>Generated JSON</h2>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <button id="copy-btn" class="btn secondary" disabled><i class="fas fa-copy"></i> Copy
+                            Text</button>
+                        <button id="download-btn" class="btn secondary" disabled><i class="fas fa-download"></i>
+                            Download .json</button>
+                    </div>
+                </div>
+                <textarea id="json-output" readonly placeholder="Your generated JSON will appear here..."></textarea>
+            </div>
+
+            <div class="tutorial-section">
+                <h3><i class="fas fa-info-circle"></i> Cara Mendapatkan UUID & Version</h3>
+                <ol>
+                    <li>Ekstrak atau buka file Addon (<code>.mcpack</code> / <code>.zip</code>) Anda.</li>
+                    <li>Cari file bernama <code>manifest.json</code> di folder utama, lalu buka dengan Text Editor.</li>
+                    <li>Cari bagian <strong><code>"header"</code></strong>. (biasanya ada di bagian paling atas)</li>
+                    <li>Salin isi dari <code>uuid</code> dan <code>version</code> yang berada <strong>di dalam block
+                            header tersebut</strong>!<br>
+                        <span class="warning-text"><i class="fas fa-exclamation-triangle"></i> <strong>Penting:</strong>
+                            Jika terdapat banyak UUID, abaikan UUID yang berada di dalam <code>"modules"</code> atau
+                            <code>"dependencies"</code>. Server hanya mengenali UUID Header utama.</span>
+                    </li>
+                </ol>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
