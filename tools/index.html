@@ -1,0 +1,340 @@
+<!-- 
+
+ █████╗ ███╗   ███╗███████╗   ██╗██████╗ 
+██╔══██╗████╗ ████║██╔════╝   ██║██╔══██╗
+███████║██╔████╔██║█████╗     ██║██║  ██║
+██╔══██║██║╚██╔╝██║██╔══╝     ██║██║  ██║
+██║  ██║██║ ╚═╝ ██║███████╗██╗██║██████╔╝
+╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝╚═╝╚═════╝ 
+
+-->
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tools List - NaughtyGoat</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../w3.css">
+    <link rel="shortcut icon" href="../assets/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <style>
+        .hero-section {
+            background: linear-gradient(135deg, #1c1c1c 0%, #2d2d2d 100%);
+            padding: 80px 20px;
+            text-align: center;
+        }
+
+        .tool-card {
+            transition: transform 0.3s;
+            cursor: pointer;
+            text-decoration: none !important;
+            display: block;
+        }
+
+        .tool-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .contact-btn {
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+        }
+
+        /* Mobile Navigation Styles */
+        .mobile-menu-btn {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 0;
+            z-index: 1001;
+            font-size: 24px;
+            padding: 8px 16px;
+            background-color: #4CAF50;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .close-header-btn {
+            display: none;
+            position: absolute;
+            right: 15px;
+            top: 0;
+            z-index: 1001;
+            font-size: 24px;
+            padding: 8px 16px;
+            background-color: #f44336;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media screen and (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+                position: fixed;
+                top: 0;
+                right: 0;
+                margin: 0;
+                height: 50px;
+                width: 50px;
+                border-radius: 0;
+                z-index: 1003;
+            }
+
+            .close-header-btn {
+                position: fixed;
+                top: 0;
+                right: 0;
+                margin: 0;
+                height: 50px;
+                width: 50px;
+                border-radius: 0;
+                z-index: 1003;
+            }
+
+            .close-header-btn.show {
+                display: block;
+            }
+
+            .mobile-menu-btn.hide {
+                display: none;
+            }
+
+            .nav-menu {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                position: fixed;
+                top: 50px;
+                left: 0;
+                background-color: #333;
+                z-index: 1002;
+                box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+            }
+
+            .nav-menu.show {
+                display: flex;
+            }
+
+            .nav-menu a {
+                display: block;
+                text-align: center;
+                padding: 15px;
+                border-bottom: 1px solid #444;
+                text-decoration: none;
+                color: white;
+                font-size: 16px;
+            }
+
+            .nav-menu a:hover {
+                background-color: #444;
+            }
+
+            .w3-bar.w3-gray.w3-top {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                padding: 0;
+                height: 50px;
+                min-height: 50px;
+                z-index: 1001;
+                background-color: #333;
+                margin: 0;
+            }
+
+            body {
+                padding-top: 0;
+                margin-top: 0;
+            }
+
+            .hero-section {
+                padding-top: 60px;
+            }
+
+            /* Pastikan konten di bawah nav menu */
+            .w3-container {
+                position: relative;
+                z-index: 1;
+            }
+        }
+
+        /* Floating Header */
+        .w3-bar.w3-top.floating {
+            position: fixed;
+            width: 100%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Style adjustments as needed */
+        .w3-bar.w3-top.floating {
+            background-color: #444 !important;
+            z-index: 1000;
+        }
+    </style>
+</head>
+
+<body class="w3-black">
+
+    <!-- Header Navigation -->
+    <div class="w3-bar w3-gray w3-top" id="mainHeader" style="position: relative;">
+        <button class="mobile-menu-btn" id="hamburgerBtn" onclick="showHeader()">
+            ☰
+        </button>
+        <button class="close-header-btn" id="closeBtn" onclick="hideHeader()">
+            ✕
+        </button>
+        <div class="nav-menu" id="navMenu">
+            <a href="../index.html" class="w3-bar-item w3-button w3-mobile">Home</a>
+            <a href="../links.html" class="w3-bar-item w3-button w3-mobile">Links</a>
+            <a href="index.html" class="w3-bar-item w3-button w3-mobile w3-light-green">Tools</a>
+            <a href="https://blog.mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Blog</a>
+            <a href="../donate.html" class="w3-bar-item w3-button w3-mobile">Donate</a>
+            <a href="mailto:support@mbeek.my.id" class="w3-bar-item w3-button w3-mobile">Contact</a>
+        </div>
+    </div>
+
+    <!-- Hero Section -->
+    <div class="hero-section">
+        <div class="w3-container w3-content" style="max-width:800px">
+            <img src="../assets/logo.png" alt="NaughtyGoat Logo" class="w3-circle"
+                style="width:120px; height:120px; margin-bottom:20px;">
+            <h1 class="w3-xxlarge w3-wide"><b>NaughtyGoat Tools</b></h1>
+            <p class="w3-medium">Use my collection of handy web tools to enhance your development workflow.</p>
+        </div>
+    </div>
+
+    <!-- Tools Section -->
+    <div id="tools" class="w3-container w3-padding-64 w3-content" style="max-width:800px">
+        <h2 class="w3-center w3-wide">Available Tools</h2>
+        <p class="w3-center w3-opacity">Find your favorite web tools here</p>
+
+        <div class="w3-row-padding w3-margin-top">
+            <!-- Tool 1 -->
+            <div class="w3-half w3-margin-bottom">
+                <a href="homepage/" class="w3-card w3-dark-grey w3-padding tool-card">
+                    <div class="w3-container">
+                        <h3 class="w3-center">NaughtyGoat Homepage</h3>
+                        <div class="w3-center">
+                            <img src="homepage/desk/load.png" alt="Homepage" style="width:80px; height:80px;">
+                        </div>
+                        <p class="w3-center">Add this to your homepage</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Tool 2 -->
+            <div class="w3-half w3-margin-bottom">
+                <a href="mcpe-packgen/" class="w3-card w3-dark-grey w3-padding tool-card">
+                    <div class="w3-container">
+                        <h3 class="w3-center">MCPE PackGen</h3>
+                        <div class="w3-center">
+                            <img src="../assets/a1.png" alt="MCPE PackGen" style="width:80px; height:80px;">
+                        </div>
+                        <p class="w3-center">For MCPE Users. Generate packs easily.</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Footer -->
+    <footer class="w3-container w3-dark-grey w3-center w3-padding-32">
+        <div class="w3-content">
+            <p>&copy; 2026 NaughtyGoat. All rights reserved.</p>
+            <p>Built with <a href="https://www.w3schools.com/w3css/" class="w3-text-green">W3.CSS</a> •
+                <a href="../index.html" class="w3-text-green">Home</a> •
+                <a href="../links.html" class="w3-text-green">Links</a>
+            </p>
+            <p class="w3-small w3-opacity">"When a goat gets lost to the Internet"</p>
+        </div>
+    </footer>
+
+    <script>
+        // Header logic for mobile
+        function showHeader() {
+            if (window.innerWidth <= 768) {
+                var hamburgerBtn = document.getElementById('hamburgerBtn');
+                var closeBtn = document.getElementById('closeBtn');
+                var navMenu = document.getElementById('navMenu');
+
+                navMenu.classList.add('show');
+                hamburgerBtn.classList.add('hide');
+                closeBtn.classList.add('show');
+            }
+        }
+
+        function hideHeader() {
+            if (window.innerWidth <= 768) {
+                var hamburgerBtn = document.getElementById('hamburgerBtn');
+                var closeBtn = document.getElementById('closeBtn');
+                var navMenu = document.getElementById('navMenu');
+
+                navMenu.classList.remove('show');
+                hamburgerBtn.classList.remove('hide');
+                closeBtn.classList.remove('show');
+            }
+        }
+
+        document.addEventListener('click', function (event) {
+            var navMenu = document.getElementById('navMenu');
+            var hamburgerBtn = document.getElementById('hamburgerBtn');
+            var closeBtn = document.getElementById('closeBtn');
+
+            if (window.innerWidth <= 768) {
+                if (navMenu && !navMenu.contains(event.target) &&
+                    !hamburgerBtn.contains(event.target) &&
+                    !closeBtn.contains(event.target)) {
+
+                    navMenu.classList.remove('show');
+                    hamburgerBtn.classList.remove('hide');
+                    closeBtn.classList.remove('show');
+                }
+            }
+        });
+
+        document.querySelectorAll('.nav-menu a').forEach(function (link) {
+            link.addEventListener('click', function () {
+                if (window.innerWidth <= 768) {
+                    var navMenu = document.getElementById('navMenu');
+                    var hamburgerBtn = document.getElementById('hamburgerBtn');
+                    var closeBtn = document.getElementById('closeBtn');
+
+                    navMenu.classList.remove('show');
+                    hamburgerBtn.classList.remove('hide');
+                    closeBtn.classList.remove('show');
+                }
+            });
+        });
+
+        window.onscroll = function () {
+            var header = document.querySelector('.w3-bar.w3-top');
+            if (document.body.scrollTop > 50 || document.documentElement.scrollTop > 50) {
+                header.classList.add('floating');
+                header.style.backgroundColor = '#333';
+            } else {
+                header.classList.remove('floating');
+                header.style.backgroundColor = '';
+            }
+        };
+
+        document.addEventListener('DOMContentLoaded', function () {
+            if (window.innerWidth <= 768) {
+                var closeBtn = document.getElementById('closeBtn');
+                closeBtn.classList.remove('show');
+                var navMenu = document.getElementById('navMenu');
+                navMenu.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+
+</html>
