@@ -25,7 +25,6 @@ document.addEventListener('DOMContentLoaded', () => {
         packs.forEach((pack, index) => {
             const packItem = document.createElement('div');
             packItem.className = 'pack-item';
-            packItem.setAttribute('draggable', 'true');
             packItem.setAttribute('data-index', index);
             
             packItem.innerHTML = `
@@ -61,15 +60,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 packs[index].version = e.target.value;
             });
 
-            // Drag events
-            packItem.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', index);
-                setTimeout(() => packItem.classList.add('dragging'), 0);
-            });
-            packItem.addEventListener('dragend', () => {
-                packItem.classList.remove('dragging');
-            });
-
             packList.appendChild(packItem);
         });
     }
@@ -97,19 +87,6 @@ document.addEventListener('DOMContentLoaded', () => {
         packs[index + direction] = temp;
         
         renderPacks();
-    }
-
-    function getDragAfterElement(container, y) {
-        const draggableElements = [...container.querySelectorAll('.pack-item:not(.dragging)')];
-        return draggableElements.reduce((closest, child) => {
-            const box = child.getBoundingClientRect();
-            const offset = y - box.top - box.height / 2;
-            if (offset < 0 && offset > closest.offset) {
-                return { offset: offset, element: child };
-            } else {
-                return closest;
-            }
-        }, { offset: Number.NEGATIVE_INFINITY }).element;
     }
 
     function generateUUID() {
@@ -182,35 +159,6 @@ document.addEventListener('DOMContentLoaded', () => {
             jsonOutput.value = '';
             downloadBtn.disabled = true;
             copyBtn.disabled = true;
-        }
-    });
-
-    packList.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        const afterElement = getDragAfterElement(packList, e.clientY);
-        const dragging = document.querySelector('.dragging');
-        if (dragging) {
-            if (afterElement == null) {
-                packList.appendChild(dragging);
-            } else {
-                packList.insertBefore(dragging, afterElement);
-            }
-        }
-    });
-
-    packList.addEventListener('drop', (e) => {
-        e.preventDefault();
-        const draggedIndex = parseInt(e.dataTransfer.getData('text/plain'));
-        
-        const items = [...packList.querySelectorAll('.pack-item')];
-        const dragging = document.querySelector('.dragging');
-        const newIndex = items.indexOf(dragging);
-        
-        if (draggedIndex !== newIndex && !isNaN(draggedIndex) && !isNaN(newIndex)) {
-            const itemToMove = packs[draggedIndex];
-            packs.splice(draggedIndex, 1);
-            packs.splice(newIndex, 0, itemToMove);
-            renderPacks();
         }
     });
 

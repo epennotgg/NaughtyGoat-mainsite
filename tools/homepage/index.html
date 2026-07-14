@@ -6,7 +6,7 @@
 ██╔══██║██║╚██╔╝██║██╔══╝     ██║██║  ██║
 ██║  ██║██║ ╚═╝ ██║███████╗██╗██║██████╔╝
 ╚═╝  ╚═╝╚═╝     ╚═╝╚══════╝╚═╝╚═╝╚═════╝ 
- 
+
 -->
 <!DOCTYPE html>
 <html lang="en">
@@ -14,7 +14,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NaughtyGoat HQ</title>
+    <title>Homepage</title>
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -70,8 +70,14 @@
                 <p id="time-meta" class="time-meta">
                     <span id="date-part">YY/MM/DD</span>
                     <span id="time-part">HH:MM:SS</span>
-                    <span class="meta-divider">|</span>
+                    <span class="meta-divider" id="battery-meta-divider">|</span>
                     <span id="battery-part">100%</span>
+                    <span class="meta-divider weather-meta-divider" style="display:none;">|</span>
+                    <span id="weather-part" style="display:none;">
+                        <span id="weather-icon-compact"></span>
+                        <span id="weather-temp-compact">--</span>
+                        <span id="weather-desc-compact">--</span>
+                    </span>
                 </p>
             </header>
 
@@ -88,16 +94,16 @@
                 <!-- Search Engine Popup -->
                 <div id="engine-dropdown" class="engine-dropdown">
                     <button onclick="setSearchEngine('Google')" class="engine-opt">
-                        <img src="https://www.google.com/s2/favicons?domain=google.com&sz=64" alt="Google"> Google
+                        <img src="https://www.google.com/s2/favicons?domain=google.com&sz=64" alt="Google" onerror="this.src='desk/load.png'"> Google
                     </button>
                     <button onclick="setSearchEngine('Bing')" class="engine-opt">
-                        <img src="https://www.google.com/s2/favicons?domain=bing.com&sz=64" alt="Bing"> Bing
+                        <img src="https://www.google.com/s2/favicons?domain=bing.com&sz=64" alt="Bing" onerror="this.src='desk/load.png'"> Bing
                     </button>
                     <button onclick="setSearchEngine('DuckDuckGo')" class="engine-opt">
-                        <img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=64" alt="DuckDuckGo"> DuckDuckGo
+                        <img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=64" alt="DuckDuckGo" onerror="this.src='desk/load.png'"> DuckDuckGo
                     </button>
                     <button onclick="setSearchEngine('Brave')" class="engine-opt">
-                        <img src="https://www.google.com/s2/favicons?domain=search.brave.com&sz=64" alt="Brave"> Brave
+                        <img src="https://www.google.com/s2/favicons?domain=search.brave.com&sz=64" alt="Brave" onerror="this.src='desk/load.png'"> Brave
                     </button>
                 </div>
             </div>
@@ -134,6 +140,33 @@
                 <button onclick="resetWallpaper()" class="danger-btn">Reset Wallpaper {revert to default}</button>
             </div>
 
+            <!-- Module Toggles -->
+            <div class="settings-section">
+                <label>Modules</label>
+                <div class="toggle-row">
+                    <label class="toggle-label" for="toggle-weather">Show Weather</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-weather" onchange="toggleWeatherModule()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <label class="toggle-label" for="toggle-battery">Show Battery</label>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="toggle-battery" onchange="toggleBatteryModule()">
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- Weather Settings -->
+            <div class="settings-section" id="weather-settings-section">
+                <label>Weather Location</label>
+                <span class="sub-label">Set your city for weather info (e.g. Jakarta)</span>
+                <input type="text" id="settings-weather-location" placeholder="Enter city name..."
+                    onchange="updateWeatherLocation()" autocomplete="off">
+            </div>
+
             <!-- Shortcut Manager Section -->
             <div class="settings-section shortcuts-manager">
                 <label>Shortcut Lines</label>
@@ -163,15 +196,16 @@
 
     <!-- Toggle Drawer Button -->
     <button id="drawer-toggle" class="drawer-toggle-btn" onclick="toggleSettings()" title="Settings">
-        <span id="drawer-toggle-icon">&lt;</span>
+        <span id="drawer-toggle-icon"><</span>
     </button>
 
-    <!-- Add Shortcut Modal -->
+    <!-- Add/Edit Shortcut Modal -->
     <div id="add-shortcut-modal" class="modal-overlay">
         <div class="modal-card">
-            <h3>Add New Shortcut</h3>
+            <h3 id="as-modal-title">Add New Shortcut</h3>
             <form onsubmit="saveNewShortcut(event)">
                 <input type="hidden" id="as-line-id">
+                <input type="hidden" id="as-edit-id">
                 <div class="input-group">
                     <label for="as-name">Name</label>
                     <input type="text" id="as-name" placeholder="e.g. YouTube" required autocomplete="off">
@@ -182,7 +216,7 @@
                 </div>
                 <div class="modal-actions">
                     <button type="button" onclick="closeAddShortcutModal()" class="cancel-btn">Cancel</button>
-                    <button type="submit" class="primary-btn">Add</button>
+                    <button type="submit" class="primary-btn" id="as-submit-btn">Add</button>
                 </div>
             </form>
         </div>

@@ -1,16 +1,30 @@
 let currentEngine = 'Google';
 let userShortcuts = [];
 const defaultWallpapers = 'desk/bg.jpg';
+let isOffline = !navigator.onLine;
+
+// Listen for online/offline events to update global state
+window.addEventListener('online', function () {
+    isOffline = false;
+    renderDashboard();
+    updateEngineUI();
+});
+
+window.addEventListener('offline', function () {
+    isOffline = true;
+    renderDashboard();
+    updateEngineUI();
+});
 
 // Initialize the dashboard app
-function initApp() {
+async function initApp() {
     // Check if name exists in localStorage
     const storedName = localStorage.getItem('crod_user_name');
 
     if (!storedName) {
         document.getElementById('onboarding-overlay').classList.add('active');
     } else {
-        loadSettings();
+        await loadSettings();
         renderDashboard();
     }
 
@@ -23,6 +37,9 @@ function initApp() {
 
     // Start clock ticking
     startTime();
+
+    // Initialize module toggles
+    initModuleToggles();
 }
 
 // IndexedDB Helper Functions
@@ -80,6 +97,60 @@ function clearIDB() {
     });
 }
 
+// --- MODULE TOGGLES ---
+
+function initModuleToggles() {
+    const showWeather = localStorage.getItem('crod_show_weather') !== 'false'; // default true
+    const showBattery = localStorage.getItem('crod_show_battery') !== 'false'; // default true
+
+    document.getElementById('toggle-weather').checked = showWeather;
+    document.getElementById('toggle-battery').checked = showBattery;
+
+    applyModuleVisibility();
+}
+
+function toggleWeatherModule() {
+    const checked = document.getElementById('toggle-weather').checked;
+    localStorage.setItem('crod_show_weather', checked);
+    applyModuleVisibility();
+    if (checked) renderWeather();
+}
+
+function toggleBatteryModule() {
+    const checked = document.getElementById('toggle-battery').checked;
+    localStorage.setItem('crod_show_battery', checked);
+    applyModuleVisibility();
+}
+
+function applyModuleVisibility() {
+    const showWeather = localStorage.getItem('crod_show_weather') !== 'false';
+    const showBattery = localStorage.getItem('crod_show_battery') !== 'false';
+
+    const weatherSection = document.getElementById('weather-settings-section');
+    const weatherPart = document.getElementById('weather-part');
+    const weatherDivider = document.querySelector('.weather-meta-divider');
+    const batteryPart = document.getElementById('battery-part');
+    const batteryDivider = document.getElementById('battery-meta-divider');
+
+    if (weatherSection) {
+        weatherSection.style.display = showWeather ? 'flex' : 'none';
+    }
+    if (weatherPart) {
+        weatherPart.style.display = showWeather ? 'inline-flex' : 'none';
+    }
+    if (weatherDivider) {
+        weatherDivider.style.display = showWeather ? 'inline' : 'none';
+    }
+    if (batteryPart) {
+        batteryPart.style.display = showBattery ? 'inline' : 'none';
+    }
+    if (batteryDivider) {
+        batteryDivider.style.display = showBattery ? 'inline' : 'none';
+    }
+}
+
+// --- END MODULE TOGGLES ---
+
 // Save first meet details
 async function saveFirstMeet(event) {
     event.preventDefault();
@@ -131,8 +202,9 @@ async function saveFirstMeet(event) {
 
     // Finish onboarding
     document.getElementById('onboarding-overlay').classList.remove('active');
-    loadSettings();
+    await loadSettings();
     renderDashboard();
+    initModuleToggles();
 }
 
 // Load and apply all settings
@@ -170,6 +242,12 @@ async function loadSettings() {
     } else {
         userShortcuts = [];
     }
+
+    // Load weather location
+    const storedWeatherLocation = localStorage.getItem('crod_weather_location');
+    if (storedWeatherLocation) {
+        document.getElementById('settings-weather-location').value = storedWeatherLocation;
+    }
 }
 
 // Apply wallpaper dynamically (Image/GIF or Video)
@@ -185,10 +263,27 @@ function applyWallpaper(url, type) {
         video.autoplay = true;
         video.muted = true;
         video.loop = true;
+        video.playsInline = true;
+        // Prevent video from hijacking pointer events
+        video.style.pointerEvents = 'none';
+        // Fallback if video fails to load — revert to default wallpaper
+        video.onerror = function () {
+            console.warn('Video wallpaper failed to load, falling back to default.');
+            localStorage.setItem('crod_wallpaper', defaultWallpapers);
+            localStorage.setItem('crod_wallpaper_type', 'image');
+            applyWallpaper(defaultWallpapers, 'image');
+        };
         bgContainer.appendChild(video);
     } else {
         const img = document.createElement('img');
         img.src = url;
+        img.draggable = false;
+        img.onerror = function () {
+            console.warn('Image wallpaper failed to load, falling back to default.');
+            localStorage.setItem('crod_wallpaper', defaultWallpapers);
+            localStorage.setItem('crod_wallpaper_type', 'image');
+            applyWallpaper(defaultWallpapers, 'image');
+        };
         bgContainer.appendChild(img);
     }
 }
@@ -208,7 +303,118 @@ function renderDashboard() {
 
     document.getElementById('greeting-text').innerHTML = `${greeting}, ${storedName}`;
     renderShortcuts();
+    renderWeather();
 }
+
+// --- WEATHER MODULE (compact inside time-meta) ---
+
+function renderWeather() {
+    const locationInput = document.getElementById('settings-weather-location');
+    if (!locationInput) return;
+
+    const showWeather = localStorage.getItem('crod_show_weather') !== 'false';
+    if (!showWeather) return;
+
+    const location = locationInput.value.trim();
+    if (!location) {
+        hideWeatherInMeta();
+        return;
+    }
+
+    // Try to get cached weather data
+    const cached = localStorage.getItem('crod_weather_cache');
+    if (cached) {
+        try {
+            const parsed = JSON.parse(cached);
+            // Use cache if less than 30 minutes old
+            if (parsed.timestamp && (Date.now() - parsed.timestamp) < 30 * 60 * 1000) {
+                updateWeatherMeta(parsed);
+                return;
+            }
+        } catch (e) {
+            // ignore invalid cache
+        }
+    }
+
+    fetchWeather(location);
+}
+
+function fetchWeather(location) {
+    // Check if user is offline
+    if (!navigator.onLine) {
+        updateWeatherMeta({ temp: '--', desc: "you're offline", icon: '', location: location, offline: true });
+        return;
+    }
+
+    // Use wttr.in as a free weather API (no key needed)
+    const url = `https://wttr.in/${encodeURIComponent(location)}?format=j1`;
+
+    fetch(url)
+        .then(res => {
+            if (!res.ok) throw new Error('Weather fetch failed');
+            return res.json();
+        })
+        .then(data => {
+            const current = data.current_condition[0];
+            const weatherData = {
+                temp: current.temp_C + '°C',
+                desc: current.weatherDesc[0].value,
+                icon: current.weatherIconUrl[0].value,
+                location: location,
+                timestamp: Date.now()
+            };
+            localStorage.setItem('crod_weather_cache', JSON.stringify(weatherData));
+            updateWeatherMeta(weatherData);
+        })
+        .catch(err => {
+            console.warn('Weather fetch error:', err);
+            if (!navigator.onLine) {
+                updateWeatherMeta({ temp: '--', desc: "you're offline", icon: '', location: location, offline: true });
+            } else {
+                hideWeatherInMeta();
+            }
+        });
+}
+
+function updateWeatherMeta(data) {
+    const weatherPart = document.getElementById('weather-part');
+    const weatherDivider = document.querySelector('.weather-meta-divider');
+    const iconEl = document.getElementById('weather-icon-compact');
+    const tempEl = document.getElementById('weather-temp-compact');
+    const descEl = document.getElementById('weather-desc-compact');
+    if (!weatherPart || !iconEl || !tempEl || !descEl) return;
+
+    iconEl.innerHTML = `<img src="${data.icon}" alt="">`;
+    tempEl.textContent = data.temp;
+    descEl.textContent = data.desc;
+
+    const showWeather = localStorage.getItem('crod_show_weather') !== 'false';
+    if (showWeather) {
+        weatherPart.style.display = 'inline-flex';
+        if (weatherDivider) weatherDivider.style.display = 'inline';
+    }
+}
+
+function hideWeatherInMeta() {
+    const weatherPart = document.getElementById('weather-part');
+    const weatherDivider = document.querySelector('.weather-meta-divider');
+    if (weatherPart) weatherPart.style.display = 'none';
+    if (weatherDivider) weatherDivider.style.display = 'none';
+}
+
+function updateWeatherLocation() {
+    const val = document.getElementById('settings-weather-location').value.trim();
+    if (val) {
+        localStorage.setItem('crod_weather_location', val);
+    } else {
+        localStorage.removeItem('crod_weather_location');
+    }
+    // Clear cache so it re-fetches
+    localStorage.removeItem('crod_weather_cache');
+    renderWeather();
+}
+
+// --- END WEATHER MODULE ---
 
 // Render shortcuts line-by-line
 function renderShortcuts() {
@@ -225,7 +431,7 @@ function renderShortcuts() {
     // Sort or filter shortcuts by lines
     userShortcuts.forEach(sc => {
         const domain = new URL(sc.url).hostname;
-        const iconUrl = `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
+        const iconUrl = isOffline ? 'desk/load.png' : `https://www.google.com/s2/favicons?domain=${domain}&sz=64`;
 
         const a = document.createElement('a');
         a.href = sc.url;
@@ -233,7 +439,7 @@ function renderShortcuts() {
         a.target = '_blank';
         a.title = sc.name;
         a.innerHTML = `
-            <img src="${iconUrl}" alt="${sc.name}" onerror="this.src='https://www.google.com/s2/favicons?domain=example.com&sz=64'">
+            <img src="${iconUrl}" alt="${sc.name}" onerror="this.src='desk/load.png'">
             <span class="shortcut-name">${sc.name}</span>
         `;
 
@@ -269,6 +475,7 @@ function renderSettingsShortcuts() {
                 <span class="sm-name" title="${sc.name}">${sc.name}</span>
             </div>
             <div class="sm-actions">
+                <button onclick="editShortcut('${sc.id}')" class="sm-edit-btn" title="Edit">&#9998;</button>
                 <button onclick="removeShortcut('${sc.id}')" class="sm-delete-btn" title="Remove">&times;</button>
             </div>
         `;
@@ -281,9 +488,12 @@ function renderSettingsShortcuts() {
 
 // Add shortcut popup modal
 function openAddShortcutModal(lineId) {
+    document.getElementById('as-modal-title').textContent = 'Add New Shortcut';
     document.getElementById('as-line-id').value = lineId;
+    document.getElementById('as-edit-id').value = '';
     document.getElementById('as-name').value = '';
     document.getElementById('as-url').value = '';
+    document.getElementById('as-submit-btn').textContent = 'Add';
     document.getElementById('add-shortcut-modal').classList.add('active');
 }
 
@@ -291,20 +501,46 @@ function closeAddShortcutModal() {
     document.getElementById('add-shortcut-modal').classList.remove('active');
 }
 
+// Edit shortcut — populate modal with existing data
+function editShortcut(id) {
+    const sc = userShortcuts.find(s => s.id === id);
+    if (!sc) return;
+
+    document.getElementById('as-modal-title').textContent = 'Edit Shortcut';
+    document.getElementById('as-line-id').value = sc.line;
+    document.getElementById('as-edit-id').value = sc.id;
+    document.getElementById('as-name').value = sc.name;
+    document.getElementById('as-url').value = sc.url;
+    document.getElementById('as-submit-btn').textContent = 'Save';
+    document.getElementById('add-shortcut-modal').classList.add('active');
+}
+
 function saveNewShortcut(event) {
     event.preventDefault();
     const lineId = parseInt(document.getElementById('as-line-id').value);
+    const editId = document.getElementById('as-edit-id').value;
     const nameInput = document.getElementById('as-name').value.trim();
     const urlInput = document.getElementById('as-url').value.trim();
 
     if (!nameInput || !urlInput) return;
 
-    userShortcuts.push({
-        id: generateId(),
-        name: nameInput,
-        url: urlInput,
-        line: lineId
-    });
+    if (editId) {
+        // Editing existing shortcut
+        const idx = userShortcuts.findIndex(s => s.id === editId);
+        if (idx !== -1) {
+            userShortcuts[idx].name = nameInput;
+            userShortcuts[idx].url = urlInput;
+            userShortcuts[idx].line = lineId;
+        }
+    } else {
+        // Adding new shortcut
+        userShortcuts.push({
+            id: generateId(),
+            name: nameInput,
+            url: urlInput,
+            line: lineId
+        });
+    }
 
     localStorage.setItem('crod_shortcuts', JSON.stringify(userShortcuts));
     closeAddShortcutModal();
@@ -352,9 +588,14 @@ document.addEventListener("DOMContentLoaded", function () {
             battery.addEventListener("levelchange", function () {
                 updateBatteryLevel(battery.level);
             });
+        }).catch(function () {
+            // API exists but permission denied or other error
+            batteryPart.textContent = "N/A";
         });
     } else {
-        batteryPart.textContent = "100%";
+        // Battery API not supported (common on mobile browsers)
+        // Hide battery section entirely since it's unavailable
+        batteryPart.textContent = "N/A";
     }
 
     function updateBatteryLevel(level) {
@@ -378,16 +619,21 @@ function setSearchEngine(engine) {
 
 function updateEngineUI() {
     const iconSpan = document.getElementById('current-engine-icon');
-    if (iconSpan) {
-        if (currentEngine === 'Google') {
-            iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=google.com&sz=32" style="width: 18px; vertical-align: middle;" alt="G">`;
-        } else if (currentEngine === 'Bing') {
-            iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=bing.com&sz=32" style="width: 18px; vertical-align: middle;" alt="B">`;
-        } else if (currentEngine === 'DuckDuckGo') {
-            iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=32" style="width: 18px; vertical-align: middle;" alt="D">`;
-        } else if (currentEngine === 'Brave') {
-            iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=search.brave.com&sz=32" style="width: 18px; vertical-align: middle;" alt="Br">`;
-        }
+    if (!iconSpan) return;
+
+    if (isOffline) {
+        iconSpan.innerHTML = `<img src="desk/load.png" style="width: 18px; height: 18px; vertical-align: middle;" alt="?">`;
+        return;
+    }
+
+    if (currentEngine === 'Google') {
+        iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=google.com&sz=32" style="width: 18px; vertical-align: middle;" alt="G">`;
+    } else if (currentEngine === 'Bing') {
+        iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=bing.com&sz=32" style="width: 18px; vertical-align: middle;" alt="B">`;
+    } else if (currentEngine === 'DuckDuckGo') {
+        iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=duckduckgo.com&sz=32" style="width: 18px; vertical-align: middle;" alt="D">`;
+    } else if (currentEngine === 'Brave') {
+        iconSpan.innerHTML = `<img src="https://www.google.com/s2/favicons?domain=search.brave.com&sz=32" style="width: 18px; vertical-align: middle;" alt="Br">`;
     }
 }
 
@@ -419,9 +665,9 @@ function toggleSettings() {
     drawer.classList.toggle('open');
     toggleBtn.classList.toggle('open');
     if (drawer.classList.contains('open')) {
-        toggleIcon.innerHTML = '&gt;';
+        toggleIcon.innerHTML = '>';
     } else {
-        toggleIcon.innerHTML = '&lt;';
+        toggleIcon.innerHTML = '<';
     }
 }
 

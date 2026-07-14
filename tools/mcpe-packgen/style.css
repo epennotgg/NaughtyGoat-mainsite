@@ -32,23 +32,7 @@ body {
     padding: 4rem 2rem;
     overflow-x: hidden;
     position: relative;
-}
-
-.background-anim {
-    position: fixed;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(16, 185, 129, 0.1) 0%, transparent 40%);
-    z-index: -1;
-    animation: rotate 30s linear infinite;
-}
-
-@keyframes rotate {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+    background-image: radial-gradient(circle at 80% 20%, rgba(59, 130, 246, 0.08) 0%, transparent 50%);
 }
 
 .container {
@@ -78,9 +62,7 @@ header h1 {
 }
 
 header h1 span {
-    background: linear-gradient(135deg, #3b82f6, #10b981);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
+    color: var(--primary);
 }
 
 header p {
@@ -176,19 +158,6 @@ main {
     align-items: center;
     gap: 1.5rem;
     transition: all 0.3s ease;
-    animation: slideIn 0.3s ease forwards;
-    cursor: grab;
-}
-
-.pack-item:active {
-    cursor: grabbing;
-}
-
-.pack-item.dragging {
-    opacity: 0.5;
-    background: rgba(255, 255, 255, 0.1);
-    border-color: var(--primary);
-    transform: scale(0.98);
 }
 
 .pack-item:hover {
@@ -196,10 +165,6 @@ main {
     border-color: rgba(255, 255, 255, 0.2);
 }
 
-@keyframes slideIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-}
 
 .pack-order-controls {
     display: flex;
